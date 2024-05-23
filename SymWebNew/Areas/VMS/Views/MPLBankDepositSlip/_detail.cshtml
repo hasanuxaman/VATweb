@@ -1,0 +1,64 @@
+﻿@model IEnumerable<VATViewModel.DTOs.MPLBankDepositSlipDetailVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+@foreach (var item in Model)
+{
+      <tr class="tablerow ">
+        @using (Html.BeginCollectionItem("MPLBankDepositSlipDetailVMs"))
+    {
+
+            <td>
+                <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+                @*<a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row btnSize"></a>*@
+
+            </td>
+
+            <td>
+                @Html.TextBox("SalesInvoiceNo", item.SalesInvoiceNo, new { @class = "  dSalesInvoiceNo   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("BankCode", item.BankCode, new { @class = "  dBankCode   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("BDBankName", item.BDBankName, new { @class = "  dBDBankName   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("CustomerName", item.CustomerName, new { @class = "  dCustomerName   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("ModeOfPayment", item.ModeOfPayment, new { @class = "  dModeOfPayment   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("InstrumentNo", item.InstrumentNo, new { @class = "  dInstrumentNo   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("InstrumentDate", item.InstrumentDate, "{0:dd-MMM-yyyy}", new { @class = "  dInstrumentDate   form-control", @readonly = "readonly" })
+
+            </td>
+            <td>
+                @Html.TextBox("Amount", item.Amount,"{0:N2}", new { @class = "  dAmount  right form-control", @readonly = "readonly" })
+
+            </td>
+
+            @Html.Hidden("BankDepositSlipHeaderId", item.BankDepositSlipHeaderId, new { @class = " dBankDepositSlipHeaderId" })
+            @Html.Hidden("TType", item.TType, new { @class = " dTType" })
+            @Html.Hidden("RefId", item.RefId, new { @class = " dRefId" })
+            @Html.Hidden("BDBankId", item.BDBankId, new { @class = " dBDBankId" })
+            @Html.Hidden("SalesInvoiceMPLHeaderId", item.SalesInvoiceMPLHeaderId, new { @class = " dSalesInvoiceMPLHeaderId" })
+            @Html.Hidden("MPLBankPaymentReceivesId", item.MPLBankPaymentReceivesId, new { @class = " dMPLBankPaymentReceivesId" })
+            @Html.Hidden("BranchId", item.BranchId, new { @class = " dBranchId" })
+          
+    }
+        
+    </tr>
+}
+  
+
+    <style>
+        .btnSize {
+            font-size: 1em !important;
+        }
+    </style>

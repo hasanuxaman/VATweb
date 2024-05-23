@@ -1,0 +1,27 @@
+﻿@model IEnumerable<VATViewModel.DTOs.MPLBankPaymentReceiveVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+@foreach (var BankPaymentReceive in Model)
+{
+    <tr class="trSelectPopUpProduct">
+        <td>@sl</td>
+        <td hidden="" class="popUpId">@BankPaymentReceive.Id</td>
+        <td hidden="" class="popUpBDBankId">@BankPaymentReceive.BDBankId</td>
+        <td class="popUpcode">@BankPaymentReceive.Code</td>
+        <td class="popUpBankCode" title="@BankPaymentReceive.BDBankCode">@BankPaymentReceive.BDBankCode</td>
+        <td class="popUpBankName">@BankPaymentReceive.BDBankName</td>
+        <td class="popUpModeOfPayment">@BankPaymentReceive.ModeOfPayment</td>
+        <td class="popUpInstrumentNo">@BankPaymentReceive.InstrumentNo.ToString()</td>
+        <td class="popUpInstrumentDate">@BankPaymentReceive.InstrumentDate</td>
+        <td class="popUpAmount">@BankPaymentReceive.Amount</td>
+        <td class="popUpIsUsedDS">@(BankPaymentReceive.IsUsedDS ? "Y" : "N")</td>
+       
+        
+        @{
+            sl++;
+        }
+    </tr>
+}

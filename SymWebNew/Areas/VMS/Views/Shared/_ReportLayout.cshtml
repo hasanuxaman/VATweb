@@ -1,0 +1,40 @@
+﻿@using System.Configuration
+@using VATServer.Ordinary
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ShampanVAT</title>
+    <meta name="viewport" content="width=device-width" />
+
+
+    <link href="~/assets/css/menu.css" rel="stylesheet" />
+    @*<link href="~/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet"  />*@
+    <link href="~/assets/stylesheets/common.css" rel="stylesheet" />
+    
+    <style>
+        #ptTimeSelectCntr {
+            display: none !important;
+        }
+
+        #btnPrint  {
+            color: #fff !important;
+            background-color: #5cb85c !important;
+            border-color: #4cae4c !important;
+        }
+    </style>
+
+</head>
+<body>
+<div class="contentBody" style="min-height: 500px">
+
+    @RenderBody()
+           
+</div>
+
+<br />
+
+</body>
+</html>

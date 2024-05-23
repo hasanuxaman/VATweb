@@ -1,0 +1,34 @@
+﻿@model VATViewModel.DTOs.MPLIN89DetailsVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow ">
+    @using (Html.BeginCollectionItem("MPLIN89DetailsVMs"))
+    {
+
+        <td>
+            @Html.TextBoxFor(model => model.TransferReceiveNo, new { @class = "  dTransferReceiveNo   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.ReceiveNaturalQuantity, "{0:N2}", new { @class = "  dUOMQty   NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.WagonNo, new { @class = "  dWagonNo   form-control", @readonly = "readonly" })
+        </td>
+        
+        
+
+        @Html.HiddenFor(m => m.TransferMPLReceiveId, new { @class = "dTransferIssueMasterRefId" })
+        @*@Html.HiddenFor(m => m.ReceiveNaturalQuantity, new { @class = "dReceiveNaturalQuantity" })*@
+        @Html.HiddenFor(m => m.TransferMPLReceiveDetailId, new { @class = "dTransferMPLReceiveDetailId" })
+        @Html.HiddenFor(m => m.ItemNo, new { @class = "dItemNo" })
+
+    }
+</tr>
+
+<style>
+    .btnSize {
+        font-size: 1em !important;
+    }
+</style>

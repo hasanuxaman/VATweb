@@ -1,0 +1,22 @@
+﻿@model IEnumerable<VATViewModel.DTOs.MPLTradeChallanDetilsVM>
+
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+@foreach (var item in Model)
+{
+    <tr class="trSelectPopUp">
+        <td>@sl</td>
+        <td hidden="">@item.Id</td>
+        <td>@item.SalesInvoiceNo</td>
+        <td>@item.InvoiceDateTime</td>
+        <td>@item.CustomerCode</td>
+        <td>@item.CustomerName</td>
+        <td>@item.AgainstSupplyOrderNo</td>
+        <td>@item.ContractOrATNo</td>
+
+    </tr>
+    sl++;
+}

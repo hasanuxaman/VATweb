@@ -1,0 +1,26 @@
+﻿@model IEnumerable<VATViewModel.DTOs.MPLBankDepositSlipDetailVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+@foreach (var item in Model)
+{
+    <tr class="trSelectPopUp">
+        <td>
+            @Html.CheckBox("Selected", false, new { @style = "margin: auto", @class = "dSelected form-control", data_id = @item.InstrumentNo })
+        </td>
+        <td>@sl</td>
+        <td hidden="">@item.SalesInvoiceMPLHeaderId</td>
+        <td>@item.SalesInvoiceNo</td>
+        <td hidden="">@item.BDBankId</td>
+        <td>@item.BankCode</td>
+        <td>@item.BDBankName</td>
+        <td>@item.CustomerName</td>
+        <td>@item.ModeOfPayment</td>
+        <td>@item.InstrumentNo</td>
+        <td style="min-width: 100px; max-width: 100px;">@item.InstrumentDate</td>
+        <td>@item.Amount</td>
+    </tr>
+    sl++;
+}

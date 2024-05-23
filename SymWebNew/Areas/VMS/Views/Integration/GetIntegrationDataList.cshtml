@@ -1,0 +1,53 @@
+﻿@model VATViewModel.DTOs.IntegrationParam
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@using VATServer.Ordinary
+
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@Html.HiddenFor(model => model.TransactionType, new { @class = " cTransactionType" })
+
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="editor-label">
+            <label>&nbsp;</label>
+        </div>
+        <div class="editor-field">
+            <table id="myDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="center">
+                            <input type="checkbox" class="chkAll" />Action
+                        </th>
+                        <th>Purchase Invoice No</th>
+                        <th>Vendor</th>
+                        <th>Receive Date</th>
+                        <th>Total Amount</th>
+                        <th>Total VAT Amount</th>
+                        <th>Is Posted</th>
+                        <th>BE Number</th>
+                        <th>Import ID</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>

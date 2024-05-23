@@ -1,0 +1,41 @@
+﻿@model System.Data.DataTable
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<style>
+
+    #itemTable {
+        width: 100% !important;
+        /*height:400px;*/
+    }
+   
+</style>
+
+<div class="row">
+    <div class="fixedParent">
+
+        <table class="trkFixTable" id="itemTable">
+            <thead>
+                <tr>
+                    @foreach (System.Data.DataColumn col in Model.Columns)
+                    {
+                        <th style="min-width: 150px; ">@col.ColumnName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody id="popUpTbody">
+                @foreach (System.Data.DataRow row in Model.Rows)
+                {
+                    <tr style="height: 0px;">
+                        @foreach (System.Data.DataColumn col in Model.Columns)
+                        {
+                            <td style="min-width: 150px;">@row[col.ColumnName]</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

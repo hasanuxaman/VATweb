@@ -1,0 +1,51 @@
+﻿@model VATViewModel.DTOs.MPLIN89IssueDetailsVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow ">
+    @using (Html.BeginCollectionItem("MPLIN89IssueDetailsVMs"))
+    {
+
+        <td>
+            @Html.TextBoxFor(model => model.TransferIssueNo, new { @class = "  dTransferIssueNo   form-control", @readonly = "readonly" })
+        </td>
+
+        <td>
+            @Html.TextBoxFor(model => model.WagonNo, new { @class = "  dWagonNo   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.IssueNaturalQuantity, "{0:N2}", new { @class = "  dUOMQty   NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.Issueat30Quantity, "{0:N2}", new { @class = "  dIssueat30Quantity   NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+      
+        <td>
+            @Html.TextBoxFor(model => model.Temperature, "{0:N2}", new { @class = "  dTemperature   NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.SP_Gravity, "{0:N2}", new { @class = "  dSP_Gravity  NumberCheck   right form-control", @readonly = "readonly" })
+        </td>
+        
+        <td>
+            @Html.TextBoxFor(model => model.DIP, "{0:N2}", new { @class = "  dDIP   NumberCheck right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.TransferFrom, new { @class = "  dTransferFrom   form-control", @readonly = "readonly" })
+        </td>
+
+        //@Html.HiddenFor(m => m.IssueNaturalQuantity, new { @class = "dIssueNaturalQuantity" })
+        @Html.HiddenFor(m => m.TransferIssueMasterRefId, new { @class = "dTransferIssueMasterRefId" })
+        @Html.HiddenFor(m => m.TransferIssueDetailsRefId, new { @class = "dTransferIssueDetailsRefId" })
+        @Html.HiddenFor(m => m.ItemNo, new { @class = "dItemNo" })
+
+
+    }
+</tr>
+
+<style>
+    .btnSize {
+        font-size: 1em !important;
+    }
+</style>

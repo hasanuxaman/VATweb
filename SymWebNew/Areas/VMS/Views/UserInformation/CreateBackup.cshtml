@@ -1,0 +1,225 @@
+﻿@model VATViewModel.DTOs.UserInformationVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "UserInformation", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmSubmit" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.UserID)
+    @Html.HiddenFor(model => model.Operation)
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmSubmit')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">User Information > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmSubmit')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">User Information > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Vendor" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Vendor" data-url="/VMS/Vendor/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+    if (Model.Operation == "update")
+    {
+        @*<div class="col-sm-12 col-md-12">
+                <div class="input-group   col-lg-8  col-md-8  col-sm-8 col-xs-12 text-color col-md-offset-2" style="">
+                    <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='first' id="first"><i class="fa fa-angle-double-left"></i>First</a>
+                    <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='previous' id="precode"><i class="fa fa-angle-left"></i>Previous</a>
+                    @Html.SimpleDropDown("", "/Config/DropDown/IdNameDropdown?tableName=Vendors&Id=VendorID&Name=VendorName&AllData=no&code=VendorCode", new { @class = " trNavigateMenu form-control selectDropdown " })
+                    <a class="input-group-addon btn btn-primary changePage" data-pager-action='current' id="current"><i class="fa fa-search"></i></a>
+                    <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='next' id="nextcode">Next <i class="fa  fa-angle-right"></i></a>
+                    <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='last' id="last">Last <i class="fa  fa-angle-double-right"></i></a>
+                </div>
+            </div>*@
+    }
+
+
+
+
+
+
+
+    <div class="col-md-6 trkPL-0 trkPR-2 animated zoomIn faster">
+        <div class="thinbox">
+            <div class="th_thinbox">
+                <p>User Information</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="VendorCode" class="col-md-4 control-label text-right trkLabelMargin">User ID</label>
+                    <div class="col-md-8">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.UserID, new { @placeholder = "User ID", @class = "form-control" })
+                        </div>
+                    </div>
+                    <label for="VendorName" class="col-md-4 control-label text-right trkLabelMargin">User Name(Login Id)</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.UserName, new { @placeholder = "User Name(Login Id)", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.UserName)
+                    </div>
+                    <label for="Password" class="col-md-4 control-label text-right trkLabelMargin">Password</label>
+                    <div class="col-md-8">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.UserPassword, new { @placeholder = "User ID", @class = " required form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.UserPassword)
+                    </div>
+                    <label for="ConfirmPassword" class="col-md-4 control-label text-right trkLabelMargin">Confirm Password</label>
+                    <div class="col-md-8">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.UserPassword, new { @placeholder = "User ID", @class = " required form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.UserPassword)
+                    </div>
+                    <label for="FullName" class="col-md-4 control-label text-right trkLabelMargin">Full Name</label>
+                    <div class="col-md-8">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.FullName, new { @placeholder = "Full Name", @class = " required form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.FullName)
+                    </div>
+                    <label for="Designation" class="col-md-4 control-label text-right trkLabelMargin">Designation</label>
+                    <div class="col-md-8">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.Designation, new { @placeholder = "Designation", @class = " required form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Designation)
+                    </div>
+                    <label for="ContactNo" class="col-md-4 control-label text-right trkLabelMargin">Contact No</label>
+                    <div class="col-md-8">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.Mobile, new { @placeholder = "Contact No", @class = " required form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Mobile)
+                    </div>
+                    <label for="Email" class="col-md-4 control-label text-right trkLabelMargin">Email</label>
+                    <div class="col-md-8">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.Email, new { @placeholder = "Email", @class = " required form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Email)
+                    </div>
+                    <label for="NationalID" class="col-md-4 control-label text-right trkLabelMargin">National Id</label>
+                    <div class="col-md-8">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.NationalId, new { @placeholder = "National ID", @class = " required form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.NationalId)
+                    </div>
+                    <label for="Address" class="col-md-4 control-label text-right trkLabelMargin">Address</label>
+                    <div class="col-md-8">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.Address, new { @placeholder = "Address", @class = " required form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Address)
+                    </div>
+
+
+                </div>
+
+                @*<div class="form-group">
+                        <label for="VendorGroupID" class="col-md-4 control-label text-right trkLabelMargin">Group</label>
+                        <div class="col-md-8">
+                            <div class="input-group col-md-6" style="margin-bottom:6px;">
+                                @Html.TextBoxFor(model => model.UserPassword, new { @placeholder = "Password", @class = " required form-control" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.UserPassword)
+                        </div>
+                        <label for="VendorGroupID" class="col-md-4 control-label text-right trkLabelMargin">Start DateTime</label>
+                        <div class="col-md-8">
+                            <div class="input-group col-md-6" style="margin-bottom:6px;">
+                                @Html.TextBoxFor(model => model., new { @class = " trDate customDatePicker  form-control" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.StartDateTime)
+                        </div>
+                    </div>*@
+
+                @*@*<div class="form-group">
+                    <label for="VendorGroupID" class="col-md-4 control-label text-right trkLabelMargin">NID/BIN /VAT Registration No.</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.VATRegistrationNo, new { @placeholder = "NID/BIN / VAT Registration No.", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.VATRegistrationNo)
+                    </div>
+
+                    @*<label for="VendorGroupID" class="col-md-4 control-label text-right trkLabelMargin">NID No.</label>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.NIDNo, new { @placeholder = "NID No.", @class = " form-control" })
+                            @Html.ValidationMessageFor(model => model.NIDNo)
+                        </div>*@
+
+
+                @*<label for="VendorGroupID" class="col-md-4 control-label text-right trkLabelMargin">TIN No</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.TINNo, new { @placeholder = "TIN No.", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.TINNo)
+                    </div>*@
+
+                @*<label for="VDS" class="col-md-4 control-label text-right trkLabelMargin">VDS</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.VDSPercent, new { @placeholder = "VDS", @class = "cVDSPercent form-control" })
+                        @Html.ValidationMessageFor(model => model.VDSPercent)
+                    </div>*@
+
+            </div>*@
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+
+
+
+
+
+                    <div class="headrow">
+                        @if (Model.Operation == "add")
+                        {
+                            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmSubmit')" class="sym-btn-save">&nbsp;Save</button>
+                        }
+                        else
+                        {
+                            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmSubmit')" class="sym-btn-update">&nbsp;Update</button>
+                        }
+                        <button type="button" title="Go To Index" data-url="/VMS/Vendor" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+                        <button type="button" title="Add New Vendor" data-url="/VMS/Vendor/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+                    </div>
+                }
+
+                @*<script>
+                    $(function () {
+                        valiDation("frmVendorMy");
+
+                        var operation = '@Model.Operation';
+                        if (operation == "update") {
+                            navigatePage();
+                        }
+
+                        function navigatePage() {
+                            var interval = setInterval(function () {
+                                if (document.querySelectorAll('.trNavigateMenu option').length > 0) {
+                                    var id = '@Model.VendorID';
+                                    $('.trNavigateMenu').select2("val", id);
+                                    clearInterval(interval);
+                                }
+                            }, 200);
+                            ////navigating previous-next
+                            $('.changePage').click(function () {
+                                var id = '@Model.VendorID';
+                                var btn = $(this).attr("data-pager-action");
+                                if (btn.toLocaleLowerCase() == "current") {
+                                    var targetId = $('.trNavigateMenu').val();
+                                    if (id == targetId) {
+                                        return;
+                                    }
+                                    id = targetId;
+                                }
+                                window.location = "/VMS/Vendor/Navigate?id=" + id + "&btn=" + btn;
+                            });
+                        }
+                    });
+                </script>*@

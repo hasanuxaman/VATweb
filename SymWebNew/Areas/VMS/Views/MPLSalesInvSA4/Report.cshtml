@@ -1,0 +1,312 @@
+﻿@model VATViewModel.DTOs.MPLSaleInvoiceSA4VM
+@using UIHelper.MVC
+
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ReportLayout.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" media="print" href="~/assets/css/print.css">
+
+<style>
+    th {
+        text-align: center;
+    }
+
+        th[scope="row"] {
+            font-size: 13px !important;
+            font-weight: 100 !important;
+            border: 1px solid #000 !important;
+        }
+
+        th[scope="col"] {
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            border: 1px solid #000 !important;
+        }
+</style>
+
+<div class="row no-print">
+    <div class="col-lg-6 col-md-6 col-sm-2 col-xs-2 pull-right"> <a onclick="window.print()" id="btnPrint" class="btn btn-success pull-right">Print</a> </div>
+</div>
+
+<div class="clearfix">&nbsp;</div>
+
+
+@using (Html.BeginForm("CreateEdit", "MPLSalesInvSA4", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmMPLSalesInvSA4" }))
+{
+    <div class="clearfix"></div>
+
+    <div class="tab-content" style="font-size:13px !important">
+        <div id="Sale" class="tab-pane fade  in active">
+            <div class="thinbox formDesign trkMY-0">
+
+                    <div class="row">
+
+                        <table class="table clsDetails" style="width: 100%; border: none !important;">
+                            <tbody>
+                                <tr>
+                                    <td><strong> Sales Invoice No</strong></td>
+                                    <td>: @Model.SalesInvoiceNo</td>
+                                    <td><strong> Invoice Date</strong></td>
+                                    <td>: @Model.InvoiceDateTime</td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Port Of Delivery</strong></td>
+                                    <td>: @Model.PortOfDelivery</td>
+                                    <td><strong> Delivery Date</strong></td>
+                                    <td>: @Model.DeliveryDate</td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Delivered To</strong></td>
+                                    <td>: @Model.CustomerName</td>
+                                    <td><strong> Delivered For</strong></td>
+                                    <td>: @Model.DeliveredForName</td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Product Delivered</strong></td>
+                                    <td>: @Model.ProuctDelivered</td>
+                                    <td><strong> Delivered By</strong></td>
+                                    <td>: @Model.DeliveredByName</td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Vessel Docked At</strong></td>
+                                    <td>: @Model.VesselDockedAt</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Started</strong></td>
+                                    <td>: @Model.Started</td>
+                                    <td><strong> Finished</strong></td>
+                                    <td>: @Model.Finished</td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Pumping</strong></td>
+                                    <td>: @Model.PumpingFrom</td>
+                                    <td><strong> Pumping</strong></td>
+                                    <td>: @Model.PumpingTo</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <br/>
+                    <div class="row">
+
+                        <table class="table table-bordered table-condensed shore-table table-striped table-hover nowrap" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th scope="col" colspan="6" style="text-align: left !important;">SHORE TANK MEASURMENTS</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <th scope="col">Tank Name</th>
+                                    <th rowspan="2" scope="col">DIP : M M</th>
+                                    <th scope="col">Local Measured Volume</th>
+                                    <th scope="col">Gross Oil Delivered in Local Volume</th>
+                                    <th rowspan="3" colspan="3" scope="col">M Tons</th>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        @Model.TankCode
+                                    </th>
+                                    <th scope="row">
+                                        @Model.LocalMeasuredVolume
+                                    </th>
+                                    <th scope="row">
+                                        @Model.LocalVolume
+                                    </th>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">
+                                        <strong> Before Pumping</strong>
+                                    </th>
+                                    <th scope="row">
+                                        @Model.DIPBefore
+                                    </th>
+                                    <th scope="row">
+                                        @Model.LocalVolumeBefore
+                                    </th>
+                                    <th scope="row">
+                                        @Model.IsBondedDutyPaid
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        <strong> After Pumping</strong>
+                                    </th>
+                                    <th scope="row">
+                                        @Model.DIPAfter
+                                    </th>
+                                    <th scope="row">
+                                        @Model.LocalVolumeAfter
+                                    </th>
+                                    <th scope="row">
+                                        @Model.GrossOilDeliveryQty
+                                    </th>
+                                    <th scope="row" colspan="2">
+                                        @Model.MTones
+                                    </th>
+                                </tr>
+
+
+                                <tr style="background-color: #b3fa9b">
+                                    <th scope="col">Observed Tank Temp &deg;C</th>
+                                    <th scope="col">A.P.I Gravity At 60 &deg;C</th>
+                                    <th scope="col">Flash Point PM(CC)&deg;C</th>
+                                    <th scope="col">Viscosity Kinematic CST (HSFO) At 50 &deg;C</th>
+                                    <th scope="col">Viscosity Kinematic CST (HSD) At 38 &deg;C</th>
+                                    <th scope="col">B S & W%</th>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        @Model.ObservedTankTemp
+                                    </th>
+                                    <th scope="row">
+                                        @Model.APIGravityAt
+                                    </th>
+                                    <th scope="row">
+                                        @Model.FlashPointPM
+                                    </th>
+                                    <th scope="row">
+                                        @Model.ViscosityKinematicCSTA
+                                    </th>
+                                    <th scope="row">
+                                        @Model.ViscosityKinematicCSTB
+                                    </th>
+                                    <th scope="row">
+                                        @Model.BSW
+                                    </th>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">
+                                        <strong> Remarks Observed SP GR</strong>
+                                    </th>
+                                    <th scope="row" colspan="2">
+                                        : @Model.RemarksObsSPGR
+                                    </th>
+                                    <th scope="row">
+                                        <strong> Sulphur Content % WT</strong>
+                                    </th>
+                                    <th scope="row" colspan="2">
+                                        : @Model.SulphurContentWT
+                                    </th>
+                                </tr>
+
+                            </tbody>
+
+
+                        </table>
+
+                    </div>
+                    <br />
+                    <div class="row">
+
+                        <table class="table clsDetails" style="width: 100%; border: none !important;">
+
+                            <tbody></tbody>
+
+                            <tbody>
+
+                                <tr>
+                                    <td style="width: 20%;"><strong> Local Agent</strong></td>
+                                    <td>: @Model.LocalAgent</td>
+                                    <td style="width: 20%;"><strong> Next Port Of Call</strong></td>
+                                    <td>: @Model.NextPortofCall</td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Export Rotation No</strong></td>
+                                    <td>: @Model.ExportRotationNo</td>
+                                    <td><strong> Plag</strong></td>
+                                    <td>: @Model.Plag</td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Custom Guarantee No</strong></td>
+                                    <td>: @Model.CustomGuaranteeNo</td>
+                                    <td><strong> Custom Guarantee Date</strong></td>
+                                    <td>: @Model.CustomGuaranteeDate</td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Custom Guarantee Imo No</td>
+                                    <td>: @Model.CustomGuaranteeImoNo</td>
+                                    <td><strong> Custom Guarantee Seal Mark</td>
+                                    <td>: @Model.CustomGuaranteeSealMark</td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Additional Information</strong></td>
+                                    <td>: @Model.AdditionalInfo</td>
+                                    <td><strong> Bank Name</strong></td>
+                                    <td>: @Model.BankName</td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Mode Of Payment</strong></td>
+                                    <td>: @Model.ModeOfPayment</td>
+                                    <td><strong> Instrument No</strong></td>
+                                    <td>: @Model.InstrumentNo</td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Instrument Date</strong></td>
+                                    <td>: @Model.InstrumentDate</td>
+                                    <td><strong> CR No</strong></td>
+                                    <td>: @Model.CRNo</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CR Date</strong></td>
+                                    <td>: @Model.CRDate</td>
+                                    <td><strong>Supplier Conformation</strong></td>
+                                    <td>: @Model.SupplierConformation</td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Price Per M. Ton</strong></td>
+                                    <td>: @Model.PricePerMTon</td>
+                                    <td><strong> Cost Of Oil</strong></td>
+                                    <td>: @Model.CostOfOil</td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Barge Hire Charge</strong></td>
+                                    <td>: @Model.BargeHireCharge</td>
+                                    <td><strong> Statutory Charge</strong></td>
+                                    <td>: @Model.StatutoryCharge</td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Current Rate From USD</strong></td>
+                                    <td>: @Model.CurrentRateFromUSD</td>
+                                    <td><strong> Total Cost BDT</strong></td>
+                                    <td>: @Model.TotalCostBDT</td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Received Vessel</strong></td>
+                                    <td>: @Model.ReceivedVessel</td>
+                                    <td><strong> Received Owner</strong></td>
+                                    <td>: @Model.ReceivedOwner</td>
+                                </tr>
+                                <tr>
+                                    <td><strong> Supplier Or Barge Captains Certificate</strong></td>
+                                    <td>: @Model.SupplierOrBargeCaptainCert</td>
+                                    <td><strong> Comments</strong></td>
+                                    <td>: @Model.Comments</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<script src="~/assets/javascripts/jquery-1.8.2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        debugger;
+        //window.print();
+    });
+</script>
+
+

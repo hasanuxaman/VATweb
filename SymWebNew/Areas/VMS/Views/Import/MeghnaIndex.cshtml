@@ -1,0 +1,60 @@
+﻿@model VATViewModel.DTOs.ImportVM
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="thinbox row">
+    <div class="th_thinbox">
+        <p>Excel Import</p>
+    </div>
+    @using (Ajax.BeginForm("MeghanImportExcel", "Import", null, new AjaxOptions { }, new { enctype = "multipart/form-data", @Id = "frmMasterImport" }))
+    {
+        <div class="col-md-2">
+            @Html.SimpleDropDownFor(m => m.TableName, "/Config/DropDown/MPLMasterTableList", new { @class = " form-control selectDropdown " })
+        </div>
+        <div class="col-md-offset-6 col-md-6 verticalLine">
+            <div class="col-md-6">
+                <label>File</label>
+                @Html.TextBoxFor(model => model.File, new { @type = "file", @accept = ".xlsx,.xls", @class = " form-control" })
+            </div>
+            <div class="col-md-6">
+                <label>&nbsp;</label>
+                <button type="button" onclick="uploadExcel()" class="sym-btn-file-upload">&nbsp;Upload</button>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+
+    debugger;
+    var fileInput = document.getElementById('File');
+    fileInput.addEventListener('change', function () {
+        debugger;
+        var filePath = this.value;
+        var allowedExtensions = /(\.xls[xm]?|\.xlsm|\.csv|\.txt|\.sun|\.pdf)$/i; // Modified regex to include .xls, .xlsx, .xlsm , .csv, .txt, .sun ,.pdf
+        if (filePath) {
+            if (!allowedExtensions.test(filePath)) {
+                ShowResult("Warning", "Please select files with allowed extensions: .xls, .xlsx, .xlsm, .csv, .txt, .sun, .pdf");
+                this.value = '';
+            }
+        }
+    });
+
+
+</script>
+
+<script>
+    function uploadExcel() {
+        var selectedTable = $('#TableName').val();
+        if (selectedTable == "") {
+            ShowResult("Fail", "select a table first");
+            return;
+        }
+        pageSubmit('frmMasterImport');
+    }
+    $(function () {
+        
+    })
+</script>

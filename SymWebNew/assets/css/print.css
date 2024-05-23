@@ -1,0 +1,52 @@
+th {
+    text-align: center !important;
+}
+
+@media print {
+    .no-print, .printMode {
+        display: none;
+    }
+
+    .thinbox {
+        border: none;
+    }
+
+    table, table.table-bordered, .shore-table {
+        border-collapse: collapse;
+        border: 1px solid black !important;
+    }
+
+    table.shore-table tr, table.shore-table th, table.shore-table td {
+        border: 1px solid black !important;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th[scope="row"], th[scope="col"] {
+        border: 1px solid #000 !important;
+        padding: 8px; 
+        text-align: left; 
+    }
+
+    link[href*="bootstrap.min.css"] {
+        display: none !important;
+    }
+
+    link[href*="bootstrap.min.css"] {
+        media: non-print !important;
+    }
+
+    .clsDetails,
+    .clsDetails td,
+    .clsDetails th {
+        border: none !important;
+    }
+
+}
+
+
+
+
+
+
+

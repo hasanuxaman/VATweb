@@ -1,0 +1,418 @@
+﻿@model VATViewModel.DTOs.TollContInOutVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@using VATServer.Ordinary
+
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@Html.HiddenFor(model => model.TransactionType, new { @class = " cTransactionType" })
+
+<div class="headrow">
+
+    <div style="display: none" id="formAppend"></div>
+    <button type="button" title="Add New" data-url="/VMS/TollContInOuts/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+
+    <label class="pull-right">Toll (@Model.TransactionType)</label>
+
+</div>
+
+<div class=" tabMenu">
+    <ul style="font-size: 1.4em;" class="tabDesign nav nav-tabs">
+
+        <li class="tabDefault active"><a data-toggle="tab" href="#IssueIndex">Index</a></li>
+       
+    </ul>
+</div>
+<div class="tab-content">
+    <div id="IssueIndex" class="tab-pane fade  in active">
+        <div class="thinbox  animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Data List</p>
+            </div>
+            <div class="dtSearch formDesign">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.Code)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.Code, new { @placeholder = "Code", @class = "  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.ImportID)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.ImportID, new { @placeholder = "Import Id", @class = "  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.DateTimeFrom)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.DateTimeFrom, new { @placeholder = " Date From", @class = "customDatePicker defaultDate  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.DateTimeTo)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.DateTimeTo, new { @placeholder = "Date To", @class = "customDatePicker defaultDate  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.Post)
+                        </div>
+                        <div class="editor-field">
+                            <select id="Post" class="form-control">
+                                <option value=""></option>
+                                <option value="Y">Y</option>
+                                <option value="N">N</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            <label>Branch Name</label>
+                        </div>
+                        <div class="editor-field">
+                            
+                            @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.BranchList, "BranchID", "BranchName", Model.BranchId), new { @class = "cBranchId form-control" })
+
+                        </div>
+                    </div>
+
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            <label>Select Top</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.SimpleDropDownFor(model => model.SelectTop, "/Config/DropDown/RecordSelectList", new { @class = " cSelectTop form-control" })
+                            &nbsp;
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                            <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                            <button type="button" title="Post Data" onclick="PostData()" class="sym-btn-post">&nbsp;Post</button>
+                            <button type="button" title="Export Data" onclick="ExportExcel()" class="sym-btn-Excel-Export">&nbsp;Export</button>
+
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            <label>Export All</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.CheckBox("ExportAll", new { id = "idExportAll", @class = "cExportAll form-control", @name = "att[]" })
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <p>&nbsp;</p>
+            <table id="myDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="center"><input type="checkbox" class="chkAll" /> Action</th>
+                        <th>Toll Invoice No</th>
+                        <th>Toll Date</th>
+                        <th>Comments</th>
+                        <th>RefNo</th>           
+                        <th>Is Posted</th>
+                        <th>Import ID</th>
+                        @*<th>Transaction Type</th>*@
+                        
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <br />
+        </div>
+
+        <div class="headrow">
+            <button type="button" title="Add New Issue" data-url="/VMS/TollProductionConsumption/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+        </div>
+        <div id="myModal" class="trkmodal"></div>
+    </div>
+    <div id="Excel" class="tab-pane fade  in ">
+        <div class="thinbox row">
+            <div class="th_thinbox">
+                <p>Excel Import</p>
+            </div>
+            @using (Html.BeginForm("ImportExcel", "TollProductionConsumption", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmIssueImport" }))
+            {
+                @Html.HiddenFor(model => model.TransactionType)
+
+                <div class="col-md-offset-6 col-md-6 verticalLine">
+                    <div class="col-md-6">
+                        <label>File</label>
+                        
+                    </div>
+                    <div class="col-md-6">
+                        <label>&nbsp;</label>
+                        <button type="button" onclick="pageSubmit('frmIssueImport');" class="sym-btn-file-upload">&nbsp;Upload</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div id="Integration" class="tab-pane fade  in formDesign">
+        <div class="thinbox">
+            <div class="th_thinbox">
+                <p>Integration</p>
+            </div>
+
+            @if (Model.TransactionType == "Other" || Model.TransactionType == "IssueReturn")
+            {
+
+                @*if (OrdinaryVATDesktop.IsACICompany(Convert.ToString(Session["CompanyCode"])))
+                    {
+                        @Html.Partial("~/Areas/VMS/Views/Integration/_IssueHeader_ACI.cshtml")
+
+                }*@
+          }
+          
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    function PostData() {
+
+        var questionMSG = "Are you sure to Post Data!";
+
+        Ask(questionMSG, function () {
+
+
+            var IDs = [];
+            var $Items = $(".dSelected:input:checkbox:checked");
+
+            if ($Items == null || $Items.length == 0) {
+                ShowResult("Fail", "You are requested to Select before Post!");
+                return;
+            }
+
+            $Items.each(function () {
+                var ID;
+                ID = $(this).attr("data-Id");
+
+                var vID = ID.split("~")[0];
+
+                IDs.push(vID);
+            });
+
+            var model = {
+                IDs: IDs
+            }
+            var url = '/VMS/TollContInOuts/MultiplePost';
+
+            $.ajax({
+                url: url
+                , data: model
+                , type: 'Post'
+                , traditional: true
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (rVM) {
+                    ShowResult(rVM.Status, rVM.Message);
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        });
+
+    }
+
+    function ExportExcel() {
+
+        var questionMSG = "Are you sure to Export Excel!";
+
+        Ask(questionMSG, function () {
+            var IssueNo = $('#IssueNo').val();
+
+            var IssueDateTimeFrom = $('#IssueDateTimeFrom').val();
+            var IssueDateTimeTo = $('#IssueDateTimeTo').val();
+            var Post = $('#Post').val();
+            var BranchId = $('#BranchId').val();
+
+            var SelectTop = $('#SelectTop').val();
+            var ExportAll = $('#idExportAll').is(":checked");
+            var TransactionType = $('.cTransactionType').val();
+
+
+
+
+            var IDs = [];
+            var $Items = $(".dSelected:input:checkbox:checked");
+
+            if (!ExportAll) {
+                if ($Items == null || $Items.length == 0) {
+                    ShowResult("Fail", "You are requested to Select before Export!");
+                    return;
+                }
+            }
+
+            $Items.each(function () {
+                var ID;
+                ID = $(this).attr("data-Id");
+
+                var vID = ID.split("~")[0];
+
+                IDs.push(vID);
+            });
+
+            var model = {
+                IDs: IDs
+            }
+            var url = '/VMS/TollContInOuts/ExportExcel';
+            var form = $('<form action="' + url + '"></form>');
+
+            IDs.forEach(function (item) {
+                form.append($('<input  value="' + item + '" name="Ids" />'))
+
+            })
+
+
+            form.append($('<input  value="' + IssueNo + '" name="IssueNo" />'))
+
+            //form.append($('<input  value="' + SearchValue + '" name="SearchValue" />'))
+            form.append($('<input  value="' + IssueDateTimeFrom + '" name="IssueDateTimeFrom" />'))
+            form.append($('<input  value="' + IssueDateTimeTo + '" name="IssueDateTimeTo" />'))
+            form.append($('<input  value="' + Post + '" name="Post" />'))
+            form.append($('<input  value="' + BranchId + '" name="BranchId" />'))
+            form.append($('<input  value="' + SelectTop + '" name="SelectTop" />'))
+            form.append($('<input  value="' + ExportAll + '" name="ExportAll" />'))
+            form.append($('<input  value="' + TransactionType + '" name="TransactionType" />'))
+
+            form.appendTo('#formAppend').submit()
+
+            // form.appendTo('body').submit()
+            //$.ajax({
+            //    url: url
+            //    , data: model
+            //    , type: 'Post'
+            //    , traditional: true
+            //    , beforeSend: function () { $(".loading").show(); }
+            //    , success: function (rVM) {
+            //        ShowResult(rVM.Status, rVM.Message);
+            //    }
+            //    , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+            //});
+
+        });
+
+    }
+
+</script>
+
+<script language="javascript" type="text/javascript">
+
+    $(document).ready(function () {
+
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/TollContInOuts/_index?TransactionType=@Model.TransactionType",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $('.dtSearch :input').each(function () {
+                    var Name = $(this).attr("Id")
+                    var Value = $(this).val()
+                    aoData.push({ "name": Name, "value": Value });
+                });
+                $.getJSON(sSource, aoData, function (json) {
+                    fnCallback(json);
+                });
+            },
+
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "15%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" class="dSelected" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                                        + '&nbsp; <a title="Click on for Edit" href=\"/VMS/TollContInOuts/Edit/' + oObj.aData[0].split('~')[0] + '?TransactionType=' + oObj.aData[7] + '\" class="sym-btn-edit-row"></a>'
+                                        + '&nbsp; <a title="Click on for Post" data-url="/VMS/TollContInOuts/Post"  onclick=checkValidBranch(this,' + oObj.aData[0].split('~')[2] + '); data-Id="' + oObj.aData[0] + '\" class="sym-btn-post-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "Code", "sWidth": "15%" }
+                            , { "sName": "DateTime", "sWidth": "10%" }
+                            , { "sName": "Comments", "sWidth": "15%" }
+                            , { "sName": "RefNo", "sWidth": "10%" }
+                            , { "sName": "Post", "sWidth": "12%" }
+                            , { "sName": "ImportID", "sWidth": "10%" }
+                            //, { "sName": "ImportId", "sWidth": "20%" }
+            ]
+        });
+
+        $('#btnDialog').click(function () {
+            var model = $('.dtSearch :input').serialize();
+            $.ajax({
+                url: "/VMS/TollContInOuts/Index",
+                cache: false,
+                data: model,
+                success: function (html) {
+                    oTable.fnDraw();
+                }
+            });
+        });
+        ////clearing fields
+        $("#Clear").on('click', function () {
+            $(".Dropdown").select2("val", "");
+            $(".form-control").val("");
+        });
+
+
+    });
+    function checkValidBranch(element, branchId) {
+        if ('@Session["BranchId"]' != branchId) {
+            ShowResult("Fail", "This Information not for this Branch!");
+            return;
+        }
+
+        btnPost(element);
+    }
+</script>
+

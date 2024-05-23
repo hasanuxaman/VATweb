@@ -1,0 +1,279 @@
+﻿@model VATViewModel.DTOs.StockMISViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+
+</style>
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Stock Meghna</h2>
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("ReportStockMPL", "MISReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmStock" }))
+        {
+            <div class="npForm col-md-6">
+                <label>Date From</label>
+                @Html.TextBoxFor(m => m.DateFrom, new { @placeholder = "Start Date", @class = "customDatePicker form-control" })
+            </div>
+            <div class="npForm col-md-6">
+                <label>Date To</label>
+                @Html.TextBoxFor(m => m.DateTo, new { @placeholder = "End Date", @class = "customDatePicker form-control" })
+            </div>
+
+            <div class="npForm col-md-12">
+                <div class="col-md-6 npForm">
+                    <label>Product Name</label>
+                    @Html.HiddenFor(m => m.ItemNo)
+                    @Html.HiddenFor(m => m.WithOutZero)
+                    @Html.TextBoxFor(m => m.ProductName, new { @class = " form-control trProductName", @readonly = "readonly" })
+                </div>
+                <div class=" col-md-2 npForm">
+                    <label>&nbsp;</label>
+                    <button type="button" class=" sym-btn-search productBtn">Search</button>
+                </div>
+
+                <div class="npForm col-md-4">
+                    <label>Product Group</label>
+                    @Html.SimpleDropDownFor(m => m.ProductGroup, "/Config/DropDown/ProductCategory", new { @class = " form-control selectDropdown trProductGroup" })
+                </div>
+
+
+            </div>
+
+            <div class="npForm col-md-12">
+
+
+                <div class="npForm col-md-4">
+                    <label>Zone Name</label>
+                    @Html.SimpleDropDownFor(m => m.ZoneID, "/Config/DropDown/ZoneProfile", new { @class = " form-control DselectDropdown" })
+                </div>
+                <div class="npForm col-md-4">
+                    <label>Branch Name</label>
+                    @Html.SimpleDropDownFor(m => m.BranchId, "/Config/DropDown/UserBranchProfile", new { @class = " form-control DselectDropdown" })
+                </div>
+
+            </div>
+
+
+    <div class="row">
+
+        <div class="npForm col-md-2">
+            <label>Decimal</label>
+            @Html.SimpleDropDownFor(m => m.ReportDecimal, "/Config/DropDown/ReportDecimal", new { @class = " form-control DRselectDropdown" })
+
+        </div>
+        <div class="npForm col-md-2" style=" margin-left: 10px;">
+            <label>Font Size</label>
+            @Html.SimpleDropDownFor(m => m.FontSize, "/Config/DropDown/Font", new { @class = " form-control DRselectDropdown" })
+        </div>
+
+
+        <div class="npForm col-md-4" style="margin-left:4%;">
+            <label class="ChecboxContainer" style="margin-right:10px;">
+                Without zero
+                <input type="checkbox" id="zeroCheck">
+                <span class="checkmark"></span>
+            </label>
+
+
+        </div>
+    </div>
+
+
+            <div class="row">
+                @Html.HiddenFor(m => m.PreviewOnly);
+                <button type="button" class=" btn sym-btn-report trPreview"> Preview</button>
+
+                <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+            </div>
+           
+        }
+    </div>
+</div>
+<div id="myHigherModal" class="HigherModal"></div>
+<script>
+    $(document).ready(function () {
+        ////boolean checkbox
+        MyCheckBox('@Model.Post', 'input-1', 'Post');
+        CheckBoxDesign();
+
+        ///check validation
+        function checkValidation() {
+            var startDate = $('#DateFrom').val();
+            if (startDate == "") {
+                ShowResult("Fail", "Select start date!");
+                return false;
+            }
+            var endDate = $('#DateTo').val();
+            if (endDate == "") {
+                ShowResult("Fail", "Select end date!");
+                return false;
+            }
+            return true;
+        }
+        ////clicking preview button
+        $('.trPreview').click(function () {
+            debugger;
+            var isValid = checkValidation();
+            if (isValid == false) {
+                return;
+            }
+            //var reportTypes="";
+            var checkedValues = $("input[type='checkbox']:checked");
+            checkedValues.each(function () {
+                //reportTypes += $(this).closest("label.ChecboxContainer").text().trim()+"~";
+                var type = $(this).closest("label.ChecboxContainer").text().trim();
+                if (type == "Without zero") {
+                    $('#WithOutZero').val(true);
+                }
+                if (type == "Quantity only") {
+                    $('#QuantityOnly').val(true);
+                }
+                if (type == "Summary") {
+                    $('#Summary').val(true);
+                }
+            });
+            debugger;
+           
+            if (!$('#zeroCheck').prop('checked'))
+            {
+                $('#WithOutZero').val(false);
+            }
+
+            //$('#ReportType').val(reportTypes);
+            $('#frmStock').submit();
+            //pageSubmit('frmStock');
+        });
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+
+    });
+
+    //clicking Download button
+
+    $(function () {
+
+        //CumulitiveRowColor();
+
+        //function CumulitiveRowColor() {
+        //    var $CumulitiveRows = $("tr:contains('Total')");
+        //    $CumulitiveRows.css("background-color", "lightgrey")
+        //    $CumulitiveRows.children().css("font-weight", "bold");
+        //}
+
+        $('.btnMisReport').click(function () {
+
+            var url = $(this).attr("data-url");
+
+            //var $closestRow = $(this).closest('.tablerow');
+
+            //var SubFormName = $closestRow.find('.cSubFormName').text();
+            ////alert(SubFormName);
+            //if (SubFormName.trim() == "-") {
+            //    return;
+            //}
+            //var NoteNo = $closestRow.find('.cNoteNo').text();
+
+            var checkedValues = $("input[type='checkbox']:checked");
+            checkedValues.each(function () {
+                //reportTypes += $(this).closest("label.ChecboxContainer").text().trim()+"~";
+                var type = $(this).closest("label.ChecboxContainer").text().trim();
+                if (type == "Without zero") {
+                    $('#WithOutZero').val(true);
+                }
+                else {
+                    $('#WithOutZero').val(false);
+                }
+                if (type == "Quantity only") {
+                    $('#QuantityOnly').val(true);
+                }
+                else {
+                    $('#QuantityOnly').val(false);
+                }
+                if (type == "Summary") {
+                    $('#Summary').val(true);
+                }
+                else {
+                    $('#Summary').val(false);
+                }
+            });
+
+            var ItemNo = $('#ItemNo').val();
+            var ProductGroup = $('#ProductGroup').val();
+            var ProductType = $('#ProductType').val();
+            var DateFrom = $('#DateFrom').val();
+            var DateTo = $('#DateTo').val();
+            var Post = $('#Post').val();
+            var WithOutZero = $('#WithOutZero').val();
+            //var BranchId = $('#BranchId').val();
+            var QuantityOnly = $('#QuantityOnly').val();
+            var Summary = $('#Summary').val();
+            var BranchId = $('#BranchId').val();
+            var BranchId = $('#BranchId').val();
+            var OrderBy = $('#OrderBy').val();
+
+            var qString = "ItemNo=" + ItemNo + "&ProductGroup=" + ProductGroup + "&ProductType=" + ProductType + "&DateFrom=" + DateFrom + "&DateTo=" + DateTo + "&Post=" + Post + "&WithOutZero=" + WithOutZero + "&QuantityOnly=" + QuantityOnly + "&Summary=" + Summary + "&BranchId=" + BranchId + "&OrderBy=" + OrderBy;
+
+
+            url = url + "?" + qString;
+
+            //  window.open(url, '_blank');
+            window.open(url);
+
+
+        });
+
+
+
+    })
+
+
+</script>
+
+@*for clicking product button*@
+<script>
+    function modalInitHigher(url) {
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+        });
+    }
+    function callbackFromProductModal(sender) {
+        var itemNo = $(sender).children('td.popUpItemNo').text();
+        $('#ItemNo').val(itemNo);
+    }
+    function callbackFromSaleModal(returnId, sender) {
+        ////nothing for now
+    }
+    $(function () {
+        $('.productBtn').click(function () {
+            var url = "/Vms/Product/GetProductPopUp?targetId=ProductName";
+            modalInitHigher(url);
+        });
+    });
+</script>

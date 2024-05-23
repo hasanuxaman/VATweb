@@ -1,0 +1,139 @@
+﻿@*@model IEnumerable<VATViewModel.DTOs.SettingsVM>*@
+@model VATViewModel.DTOs.SettingModel
+
+@using UIHelper.MVC
+
+@*<div class="row">
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>User Name</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDownFor(m => m.UserName, "/Config/DropDown/Users", new { @class = " trUserName required form-control selectDropdown" })
+            </div>
+            @Html.ValidationMessageFor(model => model.UserName)
+        </div>
+    </div>*@
+
+@*@{
+
+        string data = ViewBag.IsSettingRol;
+        int i = 0;
+    }*@
+
+<div class="row" style="margin-bottom:10px;">
+
+    <div class="col-md-4">
+        @using (Html.BeginForm("YearSelector", "Home"))
+        {
+
+            @Html.SimpleDropDown("Group", "/Config/DropDown/SettingGroup", new { @class = " form-control trkMT-0", @Id = "GroupSel" })
+        }
+    </div>
+    <div id="Users" class="col-md-4">
+        @using (Html.BeginForm("YearSelector", "Home"))
+        {
+
+            @Html.SimpleDropDownFor(m => m.UserID, "/Config/DropDown/UserId", new { @class = " form-control trkMT-0", @Id = "Users" })
+        }
+    </div>
+
+    @*@if(data =="Y"){
+
+        }*@
+
+</div>
+
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Settings</p>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>Setting Group</label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="editor-label">
+                <label>Setting Name</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>Setting Value</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>Setting Type</label>
+            </div>
+        </div>
+    </div>
+    @foreach (var item in Model.vms)
+    {
+        @Html.Partial("_SettingUser", item);
+    }
+</div>
+<script>
+    $(document).ready(function () {
+
+       
+        var interval = setInterval(function () {
+
+            if (document.querySelectorAll('#GroupSel option').length > 0) {
+
+                $('#GroupSel').val('@Model.groupName');
+
+                $('#Users').val('@Model.UserID');
+
+                clearInterval(interval);
+
+            }
+
+        }, 200);
+
+        $(".typeCheck").change(function () {
+            var $elem = $(this).closest('div.row').find('.expectedType');
+            var value = $elem.val().toLowerCase();
+            var val = $(this).val().trim().toLowerCase();
+            if (value == "bool") {
+                if (val != "y" && val != "n") {
+                    $(this).val('N');
+                    ShowResult("Fail", "Only (Y/N) is allowed for boolean!");
+
+                }
+            }
+            else if (value == "int" || value == "decimal") {
+                if (isNaN(val)) {
+                    $(this).val(0);
+                    ShowResult("Fail", "Only numeric allowed!");
+                }
+                if (value == "int") {
+                    if (Math.floor(val) != val) {
+                        $(this).val(0);
+                        ShowResult("Fail", "No decimal allowed for integer!");
+                    }
+                }
+            }
+        });
+    });
+    $("#GroupSel").change(function () {
+        debugger;
+        var group = $('#GroupSel').val();
+        var UserId = $('#Users option:Selected').val();;
+        var UserName = $('#Users option:Selected').text();
+
+        window.location.href = "/VMS/Setting/IndexUser?group=" + group + "&UserId=" + UserId + "&UserName=" + UserName;
+    });
+
+    $("#Users").change(function () {
+        debugger;
+        var group = $('#GroupSel').val();
+        var UserId = $('#Users option:Selected').val();;
+        var UserName = $('#Users option:Selected').text();
+
+        window.location.href = "/VMS/Setting/IndexUser?group=" + group + "&UserId=" + UserId + "&UserName=" + UserName;
+    });
+
+</script>

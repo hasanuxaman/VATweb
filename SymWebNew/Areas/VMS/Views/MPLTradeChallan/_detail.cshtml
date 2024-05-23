@@ -1,0 +1,41 @@
+﻿@model IEnumerable<VATViewModel.DTOs.MPLTradeChallanDetilsVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow ">
+    @using (Html.BeginCollectionItem("MPLTradeChallanDetilsVMs"))
+    {
+        foreach (var item in Model)
+        {
+            
+
+            <td>
+                @Html.TextBoxFor(model => item.ProductCode, new { @class = "  dProductCode   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBoxFor(model => item.ProductName, new { @class = "  dProductName  form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBoxFor(model => item.Quantity, new { @class = "  dCustomerCode   form-control", @readonly = "readonly" })
+            </td>
+            
+            <td>
+                @Html.TextBoxFor(model => item.VehicleNo, new { @class = "  dVehicleNo   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBoxFor(model => item.VehicleType, new { @class = "  dVehicleType   form-control", @readonly = "readonly" })
+            </td>
+
+
+        }
+
+
+    }
+</tr>
+
+<style>
+    .btnSize {
+        font-size: 1em !important;
+    }
+</style>

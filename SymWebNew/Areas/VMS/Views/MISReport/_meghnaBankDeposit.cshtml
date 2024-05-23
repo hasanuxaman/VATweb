@@ -1,0 +1,184 @@
+﻿@model VATViewModel.DTOs.MeghnaMISViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Bank Deposit Slip Info</h2>
+    </div>
+    <div class="trkmodal-body">
+    @using (Html.BeginForm("MeghnaBankDepositInfo", "MISReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmPopUpDeposit" }))
+{
+        <div class="col-md-12 npForm">
+            <label>Zone Name</label>
+            @Html.SimpleDropDownFor(m => m.ZoneId, "/Config/DropDown/ZoneProfile", new { @class = " form-control selectDropdown trProductGroup" })
+        </div>
+           <div class="npForm col-md-12">
+        <div class="col-md-10 npForm">
+            <label>Customer Name</label>
+            
+            @Html.TextBoxFor(m => m.CustomerName, new { @class = " cCustomer form-control", @readonly = "readonly" })
+            @Html.HiddenFor(m => m.CustomerId)
+           
+        </div>
+
+         <div class=" col-md-2 npForm">
+            <label>&nbsp;</label>
+            <button type="button" title="Click to Search Customer" id="customerBtn" class="sym-btn-search">Search</button>
+         </div>
+     </div>
+        
+    <div class="npForm col-md-6">
+        <label>Meghna Bank Name</label>
+        @Html.SimpleDropDownFor(m => m.SelfBankId, "/Config/DropDown/MPLSelfBankInformations", new { @class = " form-control selectDropdown trProductGroup" })
+    </div>
+         <div class="npForm col-md-6">
+        <label> Customer Bank Name</label>
+        @Html.SimpleDropDownFor(m => m.BDBankId, "/Config/DropDown/MPLBDBankInformations", new { @class = " form-control selectDropdown trProductGroup" })
+    </div>
+        <div class="npForm col-md-6">
+     <label>Mode Of Payment</label>
+     @Html.SimpleDropDownFor(m => m.ModeOfPayment, "/Config/DropDown/EnumModeOfPayment?type=ALL", new { @class = " form-control selectDropdown cBranchId" })
+    </div>
+        
+ <div class="npForm col-md-6">
+     <label>Branch Name</label>
+     @Html.SimpleDropDownFor(m => m.BranchId, "/Config/DropDown/UserBranchProfile", new { @class = " form-control selectDropdown cBranchId" })
+    </div>
+
+    <div class="npForm col-md-6">
+        <label> Date From</label>
+        @Html.TextBoxFor(m => m.DateFrom, new { @placeholder = "Start Date", @class = "customDatePicker form-control" })
+    </div>
+
+    <div class="npForm col-md-6">
+        <label>Date To</label>
+        @Html.TextBoxFor(m => m.DateTo, new { @placeholder = "End Date", @class = "customDatePicker form-control" })
+    </div>
+        
+
+    <div class="npForm col-md-6 chkDesign">
+        @Html.HiddenFor(m => m.Post, new { @class=" chkValue"})
+        <label>Post </label>
+        <input id="input-1" type="checkbox">
+    </div>
+        
+    <div class="npForm col-md-6">
+        <label>Report Type </label>
+        <select id="ReportType" name="ReportType" class="form-control" style="padding-top:2px;">
+            <option value="">Select</option>
+            <option value="SA-1">SA-01</option>
+            <option value="SA-2">SA-02</option>
+        </select>
+    </div>
+    <div class="npForm col-md-2">
+        @Html.SimpleDropDownFor(m => m.FontSize, "/Config/DropDown/Font", new { @class = " form-control DRselectDropdown" })
+    </div>
+        <button type="button" class=" btn sym-btn-report trPreview"> Preview</button>
+        <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+    }
+    </div>
+</div>
+<div id="myHigherModal" class="HigherModal"></div>
+<script>
+    $(document).ready(function () {
+        ////boolean checkbox
+        CheckBoxDesign();
+        MyCheckBox('@Model.Post', 'input-1', 'Post');
+        ///check validation
+        function checkValidation() {
+            var startDate = $('#IssueDateFrom').val();
+            if (startDate == "") {
+                ShowResult("Fail", "Select start date!");
+                return false;
+            }
+            var endDate = $('#IssueDateTo').val();
+            if (endDate == "") {
+                ShowResult("Fail", "Select end date!");
+                return false;
+            }
+            return true;
+        }
+        //clicking preview button
+        $('.trPreview').click(function () {
+            //var isValid = checkValidation();
+            //if (isValid == false) {
+            //    return;
+            //}
+            //var radioValue = $("input[type='radio'][name='rptType']:checked").closest("label.RadioContainer").text().trim();
+            //alert(radioValue);
+            //$('#ReportType').val(radioValue);
+            //alert(radioValue);
+
+            //$("#PreviewOnly").val("true");
+            $('#frmPopUpDeposit').submit();
+            //pageSubmit('frmPopUpDeposit');
+        });
+
+        $('#customerBtn').click(function () {
+            var customerName = $('.cCustomer option:selected').text();
+            var url = "/Vms/Customer/GetCustomerPopUp?CustomerName=" + customerName;
+            var modal = document.getElementById('myHigherModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myHigherModal").html(html);
+                }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+            });
+        });
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+
+        function modalInitHigher(url) {
+            var modal = document.getElementById('myHigherModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myHigherModal").html(html);
+                }
+            });
+        }
+        
+    });
+</script>
+@*callback from higher modal*@
+<script>
+    function callbackFromCustomerModal(sender) {
+        var id = $(sender).children('td.popUpCustomerId').text();
+        var CustomerName = $(sender).children('td.popUpCustomerName').text();
+        console.log(CustomerName);
+        console.log(id);
+        //////CustomerSelect(id);
+        debugger
+        //$('.cCustomer').select2('val', id);
+        $('.cCustomer').val(CustomerName);
+        $('#CustomerId').val(id);
+
+
+
+    }
+</script>

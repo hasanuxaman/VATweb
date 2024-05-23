@@ -1,0 +1,274 @@
+﻿@model VATViewModel.DTOs.UserInformationVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "UserInformation", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmSubmit" }))
+{
+    @Html.ValidationSummary(true)
+    @*@Html.HiddenFor(model => model.VendorID)*@
+    @Html.HiddenFor(model => model.Operation)
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmSubmit')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">User > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmSubmit')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">User > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/UserInformation" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Vendor" data-url="/VMS/UserInformation/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+    <br />
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 trkPL-0 trkPR-2 animated zoomIn faster">
+                <div class="thinbox">
+                    <div class="th_thinbox">
+                        <p>User</p>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            @*<div class="col-md-6 trkPL-0 trkPR-2 animated zoomIn faster">
+                                <div class="thinbox">
+                                    <div class="th_thinbox">*@
+
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+
+                                <label for="UserId" class="col-md-4 control-label text-right trkLabelMargin">User ID</label>
+                                <div class="col-md-8">
+                                    <div class="input-group col-md-6" style="margin-bottom:6px;">
+                                        @Html.TextBoxFor(model => model.UserID, new { @placeholder = "~~ New ~~", @class = "form-control", @readonly = "readonly" })
+                                    </div>
+                                </div>
+
+
+                                @if (Model.Operation.ToLower() != "update")
+                                {
+                                    <label for="UserName" class="col-md-4 control-label text-right trkLabelMargin">User Name</label>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.UserName, new { @placeholder = "UserName", @class = " required form-control" })
+                                        @Html.ValidationMessageFor(model => model.UserName)
+                                    </div>
+
+                                    <label for="UserPassword" class="col-md-4 control-label text-right trkLabelMargin">Password</label>
+                                    <div class="col-md-8">
+                                        @Html.PasswordFor(model => model.UserPassword, new { @placeholder = "********", @class = "required form-control" })
+                                        @Html.ValidationMessageFor(model => model.UserPassword)
+                                    </div>
+
+                                    <label for="ConfirmPassword" class="col-md-4 control-label text-right trkLabelMargin">Confirm Password</label>
+                                    <div class="col-md-8">
+                                        @Html.PasswordFor(model => model.NewPassword, new { @placeholder = "********", @class = "required form-control" })
+                                        @Html.ValidationMessageFor(model => model.NewPassword)
+                                    </div>
+
+                                }
+                                else
+                                {
+                                    <label for="UserName" class="col-md-4 control-label text-right trkLabelMargin">User Name</label>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.UserName, new { @placeholder = "UserName", @class = " required form-control", @readonly = "readonly" })
+                                        @Html.ValidationMessageFor(model => model.UserName)
+                                    </div>
+                                }
+
+                                <label for="FullName" class="col-md-4 control-label text-right trkLabelMargin">FullName</label>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(model => model.FullName, new { @placeholder = "Full Name", @class = " required form-control" })
+                                    @Html.ValidationMessageFor(model => model.FullName)
+                                </div>
+                                <label for="Designation" class="col-md-4 control-label text-right trkLabelMargin">Designation</label>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(model => model.Designation, new { @placeholder = "Designation", @class = " required form-control" })
+                                    @Html.ValidationMessageFor(model => model.Designation)
+                                </div>
+                                <label for="ContactNo" class="col-md-4 control-label text-right trkLabelMargin">Contact No</label>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(model => model.Mobile, new { @placeholder = "Contact No", @class = " required form-control" })
+                                    @Html.ValidationMessageFor(model => model.Mobile)
+                                </div>
+                                <label for="Email" class="col-md-4 control-label text-right trkLabelMargin">Email</label>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(model => model.Email, new { @placeholder = "example@gmail.com", @class = " required form-control" })
+                                    @Html.ValidationMessageFor(model => model.Email)
+                                </div>
+                                <label for="NationalId" class="col-md-4 control-label text-right trkLabelMargin">National ID</label>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(model => model.NationalId, new { @placeholder = "NationalId", @class = " required form-control" })
+                                    @Html.ValidationMessageFor(model => model.NationalId)
+                                </div>
+                                <label for="Address" class="col-md-4 control-label text-right trkLabelMargin">Address</label>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(model => model.Address, new { @placeholder = "Address", @class = " required form-control" })
+                                    @Html.ValidationMessageFor(model => model.Address)
+                                </div>
+                                @*<label for="ActiveStatus" class="col-md-4 control-label text-right trkLabelMargin">Active Status</label>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.ActiveStatus, new { @placeholder = "ActiveStatus", @class = " required form-control" })
+                                        @Html.ValidationMessageFor(model => model.ActiveStatus)
+                                    </div>*@
+
+                                @*<label for="ActiveStatus" class="col-md-4 control-label text-right trkLabelMargin">Active Status</label>
+                                    <div class="col-md-8">
+                                        @Html.CheckBoxFor(model => model.ActiveStatus, new { @class = "form-check-input" })
+                                        @Html.ValidationMessageFor(model => model.ActiveStatus)
+                                    </div>*@
+
+                                @*<label for="SettingMain" class="col-md-4 control-label text-right trkLabelMargin">Setting Main</label>
+                                    <div class="col-md-8">
+                                        @Html.CheckBoxFor(model => model.MainSetting, new { @class = "form-check-input", @checked = "checked" })
+                                        @Html.ValidationMessageFor(model => model.MainSetting)
+                                    </div>*@
+
+
+                                @*<label for="SettingMain" class="col-md-4 control-label text-right trkLabelMargin">Setting Main</label>
+                                    <div class="col-md-8">
+                                        @Html.CheckBoxFor(model => model.MainSetting, new { @class = "form-check-input" })
+                                        @Html.ValidationMessageFor(model => model.MainSetting)
+                                    </div>*@
+
+                                @*<label for="IsLock" class="col-md-4 control-label text-right trkLabelMargin">Is Lock</label>
+                                    <div class="col-md-8">
+                                        @Html.CheckBoxFor(model => model.IsLock, new { @class = "form-check-input" })
+                                        @Html.ValidationMessageFor(model => model.IsLock)
+                                    </div>*@
+
+
+                                @*</div>
+                                            </div>
+                                        </div>
+                                    </div>*@
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <label for="ActiveStatus" class="col-md-4 control-label text-right trkLabelMargin">Active Status</label>
+                            <div class="col-md-8">
+                                @Html.CheckBoxFor(model => model.ActiveStatus, new { @class = "form-check-input" })
+                                @Html.ValidationMessageFor(model => model.ActiveStatus)
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <label for="ActiveStatus" class="col-md-4 control-label text-right trkLabelMargin">Settings Main</label>
+                            <div class="col-md-8">
+                                @Html.CheckBoxFor(model => model.MainSetting, new { @class = "form-check-input" })
+                                @Html.ValidationMessageFor(model => model.MainSetting)
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <label for="IsLock" class="col-md-4 control-label text-right trkLabelMargin">Is Lock</label>
+                            <div class="col-md-8">
+                                @Html.CheckBoxFor(model => model.IsLock, new { @class = "form-check-input" })
+                                @Html.ValidationMessageFor(model => model.IsLock)
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <br />
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmSubmit')" class="sym-btn-save">&nbsp;Save</button>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmSubmit')" class="sym-btn-update">&nbsp;Update</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/UserInformation" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Vendor" data-url="/VMS/UserInformation/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+}
+
+@*<script>
+        $(function () {
+            valiDation("frmVendorMy");
+
+            var operation = '@Model.Operation';
+            if (operation == "update") {
+                navigatePage();
+            }
+
+        });
+    </script>*@
+<script>
+    $(document).ready(function () {
+        $("#frmSubmit").submit(function (event) {
+            if (!validateForm()) {
+                event.preventDefault();
+            }
+        });
+        function validateForm() {
+
+            debugger;
+            var isValid = true;
+            $(".required").each(function () {
+                if ($(this).val().trim() === '') {
+                    isValid = false;
+                    alert("fill in all required fields.");
+                    return false;
+                }
+            });
+            return isValid;
+        }
+    })
+</script>
+@*<script>
+        $(document).ready(function () {
+            $("#frmSubmit").submit(function (event) {
+                if (!validateForm()) {
+                    event.preventDefault();
+                }
+            });
+
+            function validateForm() {
+                var isValid = true;
+
+                $(".required").each(function () {
+                    var value = $(this).val().trim();
+
+                    if (value === '') {
+                        isValid = false;
+                        alert("Please fill in all required fields.");
+                        return false;
+                    }
+                });
+
+                // Check password length
+                var password = $("#UserPassword").val().trim();
+                if (password.length < 6) {
+                    isValid = false;
+                    alert("Password must be at least 6 characters long.");
+                }
+
+                var newPassword = $("#NewPassword").val().trim();
+                if (newPassword.length < 6) {
+                    isValid = false;
+                    alert("New Password must be at least 6 characters long.");
+                }
+
+                return isValid;
+            }
+        });
+    </script>*@

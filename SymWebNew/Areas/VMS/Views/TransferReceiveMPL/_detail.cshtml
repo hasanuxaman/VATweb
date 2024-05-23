@@ -1,0 +1,84 @@
+﻿@model VATViewModel.DTOs.TransferMPLReceiveDetailVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow ">
+    @using (Html.BeginCollectionItem("TransferMPLReceiveDetailVMs"))
+    {
+
+        @*<td>
+                <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+                <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row btnSize"></a>
+
+            </td>*@
+
+        <td>
+            @Html.TextBoxFor(model => model.ProductCode, new { @class = "  dProductCode   form-control", @readonly = "readonly" })
+        </td>
+
+        <td>
+            @Html.TextBoxFor(model => model.ProductName, new { @class = "  dItemName   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.UOM, new { @class = "  dUOM   form-control", @readonly = "readonly" })
+        </td>
+        
+             <td>
+                @Html.TextBoxFor(model => model.Quantity, "{0:N2}", new { @class = "  dQuantity NumberCheck  right form-control", style = "background-color: #ffff00;;" })
+            </td>
+
+        <td>
+            @Html.TextBoxFor(model => model.UOMQty, "{0:N2}", new { @class = "  dUOMQty NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        
+            <td style="text-align: center; background-color: #ffff00;">
+                <div style="display: inline-block; margin: 0 auto;  ">
+                    @Html.CheckBoxFor(m => m.IsReceiveComplet, new { id = "IsReceiveComplet", @class = "trIsReceiveComplet form-control" })
+                </div>
+
+            </td>
+        
+         <td>
+            @Html.TextBoxFor(model => model.AlReadyReceivedQuantity, "{0:N2}", new { @class = "  dAlReadyReceivedQuantity NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+         <td>
+             @Html.TextBoxFor(model => model.WagonNo, new { @class = "  dItemName   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.CostPrice, "{0:N2}", new { @class = "  dCostPrice right  form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.UOMc, "{0:N2}", new { @class = "  dUOMc right  form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.RequestedQuantity, "{0:N2}", new { @class = "  dRequestedQuantity NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.RequestedVolumn, "{0:N2}", new { @class = "  dRequestedVolumn NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+       
+        
+        <td>
+            @Html.TextBoxFor(model => model.SubTotal, "{0:N2}", new { @class = "  dSubTotal NumberCheck   right form-control", @readonly = "readonly" })
+        </td>
+       
+
+        @Html.HiddenFor(m => m.ItemNo, new { @class = "dItem_No" })
+        @Html.HiddenFor(m => m.TransferDateTime, new { @class = "dTransferDateTime" })
+        @Html.HiddenFor(m => m.RequestedQuantity, new { @class = "dRequestedQuantity" })
+        @Html.HiddenFor(m => m.TransactionType, new { @class = "dTransactionType" })
+        @Html.HiddenFor(m => m.ReportType, new { @class = "dReportType" })
+        @Html.HiddenFor(m => m.UOMPrice, new { @class = "dUOMPrice" })
+        @Html.HiddenFor(m => m.TransferIssueMasterRefId, new { @class = "dTransferIssueMasterRefId" })
+        @Html.HiddenFor(m => m.TransferIssueDetailsRefId, new { @class = "dTransferIssueDetailsRefId" })
+   
+
+    }
+</tr>
+
+<style>
+    .btnSize {
+        font-size: 1em !important;
+    }
+</style>

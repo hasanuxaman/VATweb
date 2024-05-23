@@ -1,0 +1,205 @@
+﻿@model VATViewModel.DTOs.DivisionVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "Division", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmDivision" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Operation)
+
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" id="btnUpd" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right"> Division > Edit</label>
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" id="btnAdd" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right"> Division > Create</label>
+        }
+        <button style="display: none;" type="button" id="btnUpdate" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+
+        <button type="button" title="Add New Issue" data-url="/VMS/Division/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="tab-content">
+        <div id="Sale" class="tab-pane fade  in active">
+            <div class="thinbox formDesign trkMY-0">
+                <div class="th_thinbox">
+                    <p>Basic</p>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            <label for="Name">Name</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.Name, new { @placeholder = "Division Name", @class = "cName form-control required" })
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            <label>Active Status</label>
+                        </div>
+                        <div class="editor-field" style="padding-left: 40px;">
+                            @Html.CheckBox("IsActive", new { id = "IsActive", @class = "cIsActive form-control", @style = "width:20px;" })
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<div class="tab-content">
+    <div id="SaleIndex" class="tab-pane fade  in active">
+        <div class="thinbox  animated zoomIn animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Division List </p>
+            </div>
+            <p>&nbsp;</p>
+            <table id="myDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="center"><input type="checkbox" class="chkAll" />Action</th>
+                        <th>Division Name</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <br />
+        </div>
+    </div>
+</div>
+
+
+<div id="myModal" class="trkmodal"></div>
+<div id="productDetails" class="trkmodal">
+    <div class="trkmodal-content">
+    </div>
+</div>
+
+<div id="myHigherModal" class="HigherModal"></div>
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+    <script language="javascript" type="text/javascript">
+
+    $(document).ready(function () {
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/Division/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $('.dtSearch :input').each(function () {
+                    var Name = $(this).attr("Id")
+                    var Value = $(this).val()
+                    aoData.push({ "name": Name, "value": Value });
+                });
+
+                $.getJSON(sSource, aoData, function (json) {
+                    fnCallback(json);
+                });
+            },
+
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "12%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    debugger;
+                                    return '<a id="" title="Click on for Edit" style="text-decoration:none;" onclick=EditData("' + oObj.aData[0] + '")  class=" innerListLink sym-btn-edit-row"></a>'
+                                    ;
+                                    //return '&nbsp; <a title="Click on for Edit" href=\"/VMS/Division/Edit/' + oObj.aData[0].split('~')[0] + '?TransactionType=' + "Other" + '\" class="sym-btn-edit-row"></a>'
+                                    //;
+                                }
+                            }
+                            , { "sName": "Name", "sWidth": "10%" }
+                            , { "sName": "Status", "sWidth": "12%" }
+            ]
+        });              
+        
+        $('#btnDialog').click(function () {
+            debugger
+            var model = $('.dtSearch :input').serialize();
+            $.ajax({
+                url: "/VMS/District/Index",
+                cache: false,
+                success: function (html) {
+                    oTable.fnDraw();
+                }
+            });
+        });
+    });
+
+</script>
+
+
+
+    @*--------------------------for save method--------------------------*@
+    <script>
+        
+        function EditData(data) {
+            debugger;
+            var isChecked = false;
+            data = data.split("~");
+            var operation = "update";
+            var masterId = parseInt(data[0]);
+            var name = data[1];
+            var isActive = data[2];
+            if (isActive == "True")
+            {
+                isChecked = true;
+            }
+
+            $('#Id').val(masterId);
+            $('#Name').val(name);
+            $('#Operation').val(operation);
+            $('#IsActive').prop('checked', isChecked);
+
+            $('#btnAdd').hide();
+            $('#btnUpd').hide();
+            $('#btnUpdate').show();
+
+        };
+
+        function SaveData() {
+            debugger;
+            var a = requiredFields('frmDivision');
+
+            var itemNo = $('.cName').val();
+            if (itemNo == "") {
+                ShowResult("Fail", "Division Name Required!");
+                return;
+            }
+
+            if (a != 0) {
+                return;
+            }
+
+            pageSubmit('frmDivision');
+        }
+    
+    </script>
+
+}
+

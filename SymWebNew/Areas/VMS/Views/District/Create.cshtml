@@ -1,0 +1,132 @@
+﻿@model VATViewModel.DTOs.DistrictVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "District", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmDistrict" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Operation)
+
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right"> District > Edit</label>
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right"> District > Create</label>
+        }
+
+        <button type="button" title="Go To Index" data-url="/VMS/District" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New District" data-url="/VMS/District/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="tab-content">
+        <div id="Sale" class="tab-pane fade  in active">
+            <div class="thinbox formDesign trkMY-0">
+                <div class="th_thinbox">
+                    <p>Basic</p>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            <label for="Name">District Name</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.Name, new { @placeholder = "District Name", @class = "cName form-control required" })
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            <label for="DivisionId">Division Name</label>
+                        </div>
+                        <div class="editor-field" id="mydiv" data-myval="DivisionId">
+                            @Html.SimpleDropDownFor(m => m.DivisionId, "/Config/DropDown/DivisionList", new { @class = " cDivisionId required  form-control  selectDropdown" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            <label>Active Status</label>
+                        </div>
+                        <div class="editor-field" style="padding-left: 40px;">
+                            @Html.CheckBox("IsActive", new { id = "IsActive", @class = "cIsActive form-control", @style = "width:20px;" })
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="headrow">
+                @if (Model.Operation == "update")
+                {
+                <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+                }
+                else if (Model.Operation == "add")
+                {
+                <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+                }
+
+                <button type="button" title="Go To Index" data-url="/VMS/District" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+                <button type="button" title="Add New District" data-url="/VMS/District/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">
+                    &nbsp;New </button>
+            </div>
+
+        </div>
+    </div>
+}
+<div id="myModal" class="trkmodal"></div>
+<div id="productDetails" class="trkmodal">
+    <div class="trkmodal-content">
+    </div>
+</div>
+
+<div id="myHigherModal" class="HigherModal"></div>
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @*--------------------------for save method--------------------------*@
+    <script>
+       
+        $(document).ready(function () {
+            debugger;
+            $('.cDivisionId').select2('data', { id: '@Model.DivisionId', text: '@Model.DivisionName' });
+        });
+
+        
+
+        function SaveData() {
+            debugger;
+            var a = requiredFields('frmDistrict');
+
+            var itemNo = $('.cName').val();
+            if (itemNo == "") {
+                ShowResult("Fail", "District Name Required!");
+                return;
+            }
+            var division = $('.cDivisionId').val();
+            if (division == "") {
+                ShowResult("Fail", "Division Name Required!");
+                return;
+            }
+
+            if (a != 0) {
+                return;
+            }
+
+            pageSubmit('frmDistrict');
+        }
+    </script>
+
+}
+

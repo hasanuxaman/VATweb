@@ -1,0 +1,276 @@
+﻿@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+    .trkMT10 {
+        margin-top: 10px;
+    }
+
+    .sortableHeader {
+        cursor: pointer;
+    }
+
+    table.trkFixTable tr.trSelectPopUpProduct td {
+        overflow-x: hidden;
+    }
+
+
+
+</style>
+
+
+<div class="row">
+
+    <div class="col-md-1">
+        <div class="editor-label">
+            <label for="Processed">Processed</label>
+        </div>
+        <div class="editor-field">
+            <select class="form-control" id="Processed" name="Processed">
+                <option>ALL</option>
+                <option>Y</option>
+                <option selected>N</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="searchText">
+        <div class="col-md-2">
+            <label>Search Value</label>
+            @Html.TextBox("SearchValue", "", new { @class = " form-control" })
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label for="FromDate">From Date</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("ReceiveFromDate", "", new { @placeholder = "From Date", @class = "cFromDate  customDatePicker  form-control" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label for="ToDate">To Date</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("ReceiveToDate", "", new { @placeholder = "To Date", @class = " cToDate customDatePicker  form-control" })
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-1">
+        <label>&nbsp;</label>
+        <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search btnSaleSearch" style="width:100%">&nbsp;Search</button>
+    </div>
+    <div class="col-md-1">
+        <label>&nbsp;</label>
+        <button type="button" title="Click to Clear" id="clearBtn" class="sym-btn-clear btnClear" style="width:100%">&nbsp;Clear</button>
+    </div>
+</div>
+
+@*<div class="container">
+    <div class="row">*@
+        <div id="integrationHtml"></div>
+    @*</div>
+</div>*@
+
+<form id="ReportForm" method="post" target="_blank"></form>
+<div id="myHigherModal" class="HigherModal"></div>
+
+@*--------------------Search/Save/Clear------------------------*@
+
+<script>
+
+    $(document).ready(function () {
+            
+        //    $(".customDatePicker").datepicker({
+        //        dateFormat: 'dd-MM-yyyy',
+        //    });
+        //    var today = FormatDate(new Date());
+
+        //    $(".customDatePicker").val(today);
+
+        //});
+
+        //Edit
+
+        
+
+
+        $(function () {
+
+            $("#IntegrationDataList #searchBtn").on("click", function () {
+
+                IntegrationSearch();
+            });
+
+            $("#IntegrationDataList #clearBtn").on("click", function () {
+                IntegrationClear();
+            });
+
+        });
+
+        function IntegrationSearch(IDs, SearchField) {        
+            var model = {
+                refNo: $("#IntegrationDataList #SearchValue").val()
+                , SearchField: $("#IntegrationDataList #SearchFieldType").val()
+                , FromDate: $("#IntegrationDataList #ReceiveFromDate").val()
+                , ToDate: $("#IntegrationDataList #ReceiveToDate").val()
+            }
+
+            $.ajax({
+                data: model
+                , url: "/Vms/Integration/GetPurchaseIntegrationAuditData"
+                , cache: false
+                 , traditional: true
+                , type: "POST"
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (html) {
+                    debugger;
+                    $("#IntegrationDataList #integrationHtml").html("");
+                    $("#IntegrationDataList #integrationHtml").html(html);
+                    callingFixedPopUpTable();
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+            });
+        }
+
+        function IntegrationClear() {
+            $("#IntegrationDataList .searchText :input").val("");
+        }
+
+    })
+</script>
+
+@*--------------------------------------------------Detail--------------------------------------------------*@
+<script>
+    ////$(function () {
+    function closeModal() {
+        var modal = $('#IntegrationDataList #myHigherModal');
+
+        modal.html("");
+        modal.css("display", "none");
+    }
+
+</script>
+
+
+<script>
+    $("#IntegrationDataList .chkAll").click(function () {
+        $('#IntegrationDataList  .dSelected:input:checkbox').not(this).prop('checked', this.checked);
+    });
+
+</script>
+
+<script language="javascript" type="text/javascript">
+
+    function settingtrkFixedColumnWidth(tableId, widthArgs) {
+
+
+        //debugger;
+        //if (widthArgs == null) {
+        //    return;
+        //}
+        //var i;
+        //for (i = 1; i <= widthArgs.length; i++) {
+        //    $('#' + tableId + ' tr td:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+        //    $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+        //}
+
+        
+        debugger;
+        if (widthArgs == null) {
+            return;
+        }
+        var i;
+        var j = 2;
+        for (i = 1; i <= widthArgs.length; i++) {
+            $('#' + tableId + ' tr td:nth-child(' + j + ')').css("min-width", widthArgs[i - 1] + "px");
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+            j++;
+        }
+
+
+    };
+    function fixedScrolltrkFixedTable(tableId, leftTotal) {
+        debugger;
+        $('#' + tableId + ' tbody').scroll(function (e) {
+            var i;
+            var j = 2;
+            for (i = 1; i <= leftTotal; i++) {
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("z-index", "1");
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+
+                $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("z-index", "1");
+                $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                j++;
+            }
+            $('#' + tableId + ' thead').css("left", -$("#" + tableId + " tbody").scrollLeft());
+            //$('#' + tableId + ' thead th:nth-child(2)').css("left", $("#" + tableId + " tbody").scrollLeft());
+
+        });
+    };
+    function fixLeftColumns(tableId, leftTotal) {
+        debugger;
+        var i;
+        var j = 2;
+        for (i = 1; i <= leftTotal; i++) {
+            //fixed column header style
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("height", "40px");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("position", "relative");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("z-index", "2");
+            //fixed column rows style
+            $('#' + tableId + ' tbody tr td:nth-child(' + j + ')').css("height", "40px");
+            $('#' + tableId + ' tbody tr td:nth-child(' + j + ')').css("position", "relative");
+            j++;
+        }
+    };
+    function settingWidth(tableId) {
+        debugger;
+        var parentWidth = $('#' + tableId).closest('.fixedParent').width();
+        $('#' + tableId + ' thead').width(parentWidth);
+        $('#' + tableId + ' tbody').width(parentWidth);
+    };
+    function trkFixedTable(tableId, leftTotal, args) {
+        debugger;
+        settingWidth(tableId);
+        fixLeftColumns(tableId, leftTotal);
+        fixedScrolltrkFixedTable(tableId, leftTotal);
+        settingtrkFixedColumnWidth(tableId, args);
+    };
+    function callingFixedPopUpTable() {
+        debugger;
+        //$('#itemTable').width('100%');
+       
+
+        //var args = [85, 85, 85, 85, 85, 85, 85, 90, 90, 90, 90, 90, 10, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 150, 200, 150, 150, 150, 150, 150, 150, 150, 150, 100];
+        //var args = [100, 100, 85, 85, 85, 85, 85, 90, 90, 90, 90, 90, 10, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 150, 200, 150, 150, 150, 150];
+        //trkFixedTable("itemTable", 0, args);
+        trkFixedTable("itemTable", 0, 0);
+       
+
+    };
+
+</script>
+
+@*--------------------------------------------------unused--------------------------------------------------*@
+
+<script>
+
+    $(function () {
+
+        $(document).on('click', '#Integration .trSelectPopUpProduct', function () {
+            var activeEl = $('#Integration tr.active');
+            activeEl.removeClass("#Integration active");
+            $(this).addClass(" active");
+        });
+
+    });
+
+
+</script>
+
+
+
+
